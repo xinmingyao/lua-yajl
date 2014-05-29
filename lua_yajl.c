@@ -7,6 +7,21 @@
 #include <errno.h>
 #include <string.h>
 
+
+
+#if LUA_VERSION_NUM >= 502
+
+static void luaL_register (lua_State *L, const char *libname, const luaL_Reg *l)
+{
+    if (libname) lua_newtable(L);
+    luaL_setfuncs(L, l, 0);
+}
+
+#define lua_objlen lua_rawlen
+#define lua_setfenv lua_setuservalue
+#define lua_getfenv lua_getuservalue
+#endif
+
 #define js_check_generator(L, narg) \
     (yajl_gen*)luaL_checkudata((L), (narg), "yajl.generator.meta")
 
